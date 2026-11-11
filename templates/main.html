@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Guess the word</title>
+</head>
+<body bgcolor="lightblue" background="{{ url_for('static',filename='animals.jpg') }}" style="background-size:cover;">
+<center>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <p>{{message}}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+</center>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<h1 align="center" style="color:#8B008B">GUESS THE WORD OR HANGMAN</h1>
+<form method="get" action="{{url_for('main',display_hangman = display_hangman,guesses1 = guesses1,display_hint = display_hint,try_again=try_again,letters_count=letters_count)}}" align="center">
+
+    {% if game_over %}
+    <h1 align="center" style="color:#006B3C">{{correct_answer}}</h1>
+    {% endif %}
+
+    {% if not game_over %}
+    <h1 style="color:green">Hint: {{display_hint}}
+    {% endif %}
+
+    <h2 style="color:#E52B50">({{letters_count}} letter word)</h2>
+
+</form>
+
+<form method="post" action="{{ url_for('main',correct_answer=correct_answer,user_guess=user_guess,already_guessed=already_guessed,hint_message=hint_message,display_hint = display_hint,wrong_answer = wrong_answer,session_reset=session_reset,game_over=game_over,complete=complete,right_ans=right_ans)}}" align="center">
+
+    {% if not complete and not game_over %}
+    <input type="text" name="answer" align="center" maxlength="1" style="width:30px; text-align:center" pattern="[a-z]" required>
+    <input type="submit" name="submit" align="center">
+    {% endif %}
+
+    {% if not user_guess %}
+    <h3><a href="{{ url_for('reset') }}">CHANGE</a></h3>
+    {% endif %}
+
+    <h1 style="color:dimgrey">Hangman art:</h1>
+    <h2 style="color:blue">(This game is over if hangman is completed)</h2>
+
+</form>
+
+    {% if right_ans %}
+        <h1 align="center" style="color:green">{{right_ans}}</h1>
+    {% endif %}
+
+    {% if wrong_answer %}
+        <h1 align="center" style="color:red">{{wrong_answer}}</h1>
+    {% endif %}
+
+    {% if hint_message %}
+        <h1 align="center" style="color:violet">{{hint_message}}</h1>
+    {% endif %}
+
+    {% if already_guessed %}
+        <h1 align="center" style="color:purple">{{already_guessed}}</h1>
+    {% endif %}
+
+<!--<h2 align="center" style="color:red">{{wrong_answer}}</h2>-->
+<h1 align="center" style="color:red">{{game_over}}</h1>
+<h1 align="center" style="color:green">{{complete}}</h1>
+
+<h1 style="color:brown" align="center"><pre>{{ display_hangman }}</pre></h1>
+
+<form method="post" action="{{url_for('tryagain')}}">
+{% if game_over or complete  %}
+<h3 align="center"><a href="{{ url_for('reset') }}">TRY AGAIN</a></h3>
+{% endif %}
+</form>
+
+<h1 align="center" style="color:orange"><marquee>GUESS THE ANIMALS</marquee></h1>
+
+</body>
+</html>
